@@ -1,0 +1,37 @@
+{% extends 'book_view.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+
+
+<div class="row" >
+	<div class="col-lg-6" style="display: inline;width: 15%" >
+	    <a class="btn btn-info" style="margin-bottom: 10px" href="{{ url_for('book.book_view') }}" >回到主页</a>
+	</div>
+</div>
+
+
+
+{% if borrow_user_look %}
+<table class="table">
+	<thead>
+		<tr>
+			<th>书名</th>
+			<th>出版社</th>
+            <th>出版年份</th>
+			<th>借出数量</th>
+        </tr>
+	</thead>
+	{% for b in borrow_user_look %}
+		<td>{{ b.name }}</td>
+        <td>{{ b.press_name }}</td>
+        <td>{{ b.press_year }}</td>
+		<td>{{ b.borrow_count }}</td>
+        <td>
+            <a href="{{ url_for('book.return_book', borrow_id=b.borrow_id) }}" onclick="return confirm('确定要归还吗？');">归还</a>
+        </td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

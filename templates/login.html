@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block page_content %}
+    <div class="page-header">
+	<h1>你好!请输入{{ permission }}工号和密码</h1>
+    </div>
+{{ wtf.quick_form(form) }}
+    <br></br>
+<p>{{ error }}</p>
+{% endblock %}
+{#<!-- 登录表单 -->#}
+{#<form method="POST">#}
+{#    {{ form.csrf_token }}#}
+{#    {{ render_field(form.username) }}#}
+{#    {{ render_field(form.password) }}#}
+{#    {% if emsg %}  <!-- 如果有错误信息 则显示 -->#}
+{#        <h3> {{ emsg }}</h3>#}
+{#    {% endif %}#}
+{#    <input type="submit" value="登录">#}
+{#</form>#}

@@ -1,0 +1,80 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block title %}浏览图书{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+	<div class="container">
+	 	<div  style="width: 10%;display: inline">
+	 		<ul class="nav navbar-nav">
+	 			<li><a href="/">Home</a></li>
+	 		</ul>
+	 	</div>
+        <div  style="width: 10%;display: inline">
+	 		<ul class="nav navbar-nav">
+	 			<li style="{% if role=='图书管理员' %}display:none;{% endif %}"><a href="{{ url_for('book.borrow_user') }}">我的借阅</a></li>
+	 		</ul>
+	 	</div>
+	 </div>
+</div>
+{% endblock %}
+
+
+
+{% block page_content %}
+
+<div class="row" >
+	<div class="col-lg-6" style="display: inline;width: 15%" >
+	    <a class="btn btn-info" style="{% if role!='图书管理员' %}display:none;{% endif %}margin-bottom: 10px" href="{{ url_for('book.book_add') }}" >添加新的图书</a>
+	</div>
+    <div style="display: inline;margin-bottom: 10px">
+        <a class="btn btn-info" style="margin: auto" href="{{ url_for('book.book_view') }}">显示全部</a>
+    </div>
+<form class="form-inline" style="display: inline;" method="post" role="form">
+	{{ form.hidden_tag() }}
+	{{ wtf.form_errors(form, hiddens="True") }}
+	<div class="col-lg-6" style="display: inline;text-align:right">
+        <div class="input-group">
+        {{ form.name(class="form-control", placeholder="输入书名进行查询") }}
+            <span  class="input-group-btn" >
+            {{ wtf.form_field(form.submit) }}
+            </span>
+        </div>
+	</div>
+</form>
+
+</div>
+
+{% if book %}
+<table class="table">
+	<thead>
+		<tr>
+			<th>图书编号</th>
+			<th>书名</th>
+			<th>出版社</th>
+            <th>出版年份</th>
+            <th>价格</th>
+			<th>数量</th>
+        </tr>
+	</thead>
+	{% for b in book %}
+		<td>{{ b.id }}</td>
+		<td>{{ b.name }}</td>
+        <td>{{ b.press_name }}</td>
+        <td>{{ b.press_year }}</td>
+        <td>{{ b.price }}</td>
+		<td>{{ b.count }}</td>
+        <td {% if role!='图书管理员' %} hidden {% endif %}>
+            <a href="{{ url_for('book.book_update', id=b.id) }}" >编辑</a>
+            <a href="{{ url_for('book.book_delete', book_id=b.id) }}" onclick="return confirm('确定要删除吗？');">删除</a>
+        </td>
+        <td {% if role=='图书管理员' %} hidden {% endif %}>
+            <a href="/login/book/borrow_book/{{ user_id }}/{{ b.id }}" >借阅</a>
+        </td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<p>看来没有符合条件的图书</p>
+{% endif %}
+{% endblock %}
